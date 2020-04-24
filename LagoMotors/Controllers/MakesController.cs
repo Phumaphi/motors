@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LagoMotors.Data;
+using LagoMotors.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LagoMotors.Controllers
 {
@@ -11,11 +14,19 @@ namespace LagoMotors.Controllers
     [ApiController]
     public class MakesController : ControllerBase
     {
+        private readonly AppDbcontext _appDbcontext;
+
+        public MakesController(AppDbcontext appDbcontext)
+        {
+            _appDbcontext = appDbcontext;
+        }
         // GET: api/Makes
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<Make>> Makes()
         {
-            return new string[] { "value1", "value2" };
+            var makelist = await _appDbcontext.Makes.Include(c => c.Models).ToListAsync();
+
+            return makelist;
         }
 
         // GET: api/Makes/5
