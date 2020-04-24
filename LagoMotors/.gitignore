@@ -4,13 +4,18 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
-*.suo
+*.suo/*
 *.user
 *.userosscache
 *.sln.docstates
-
+LagoMotors/v16/*
+*.suo/*
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+*.vs/LagoMotors/v16/.suo/*
+/.vs/LagoMotors/DesignTimeBuild
+/.vs/LagoMotors/config
+/.vs/config
 
 # Build results
 [Dd]ebug/
@@ -322,3 +327,5 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 /Code/CDP.WEB/wwwroot/lib/js/core/libraries/New folder
+*/.vs/*
+*/v15/*
