@@ -1,49 +1,52 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LagoMotors.Data;
 using LagoMotors.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LagoMotors.Controllers
 {
     [Route("api/[controller]")]
+    [Route("")]
+    [Route("Features")]
     [ApiController]
-    public class MakesController : ControllerBase
+    public class FeaturesController : ControllerBase
     {
         private readonly AppDbcontext _appDbcontext;
 
-        public MakesController(AppDbcontext appDbcontext)
+        public FeaturesController(AppDbcontext appDbcontext)
         {
             _appDbcontext = appDbcontext;
         }
-        // GET: api/Makes
+        // GET: api/Features
         [HttpGet]
-        public async Task<List<Make>> Makes()
+        public async Task<IEnumerable<Feature>> Features()
         {
+            var featureList = await _appDbcontext.Features.ToListAsync();
 
-            var makelist = await _appDbcontext.Makes
-                .Include(c => c.Models).ToListAsync();
 
-            return makelist;
+            return featureList;
         }
 
-
-
-        // GET: api/Makes/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        // GET: api/Features/5
+        [Route("{id}")]
+        [HttpGet("{id}")]
+        public string Feature(int id)
         {
             return "value";
         }
 
-        // POST: api/Makes
+        // POST: api/Features
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT: api/Makes/5
+        // PUT: api/Features/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {

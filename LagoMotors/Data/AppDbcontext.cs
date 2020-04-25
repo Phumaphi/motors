@@ -14,11 +14,11 @@ namespace LagoMotors.Data
         { }
         public DbSet<Make> Makes { get; set; }
         public DbSet<Model> Models { get; set; }
-        public DbSet<FeatureModel> FeatureModels { get; set; }
+        public DbSet<Feature> Features { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           modelBuilder.Seed();
+            modelBuilder.Seed();
 
         }
 

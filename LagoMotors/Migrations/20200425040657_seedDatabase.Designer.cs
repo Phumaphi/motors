@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LagoMotors.Migrations
 {
     [DbContext(typeof(AppDbcontext))]
-    [Migration("20200425011051_SeedingFeatureModel")]
-    partial class SeedingFeatureModel
+    [Migration("20200425040657_seedDatabase")]
+    partial class seedDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,9 @@ namespace LagoMotors.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ModelId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)")
@@ -34,75 +37,34 @@ namespace LagoMotors.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feature");
+                    b.HasIndex("ModelId");
+
+                    b.ToTable("Features");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
+                            ModelId = 2,
                             Name = "AirBag"
                         },
                         new
                         {
                             Id = 2,
+                            ModelId = 2,
                             Name = "Breaks Lights"
                         },
                         new
                         {
                             Id = 3,
+                            ModelId = 1,
                             Name = "Baby Seat"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Power Steering"
-                        });
-                });
-
-            modelBuilder.Entity("LagoMotors.Models.FeatureModel", b =>
-                {
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FeatureId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ModelId", "FeatureId");
-
-                    b.HasIndex("FeatureId");
-
-                    b.ToTable("FeatureModels");
-
-                    b.HasData(
-                        new
-                        {
                             ModelId = 1,
-                            FeatureId = 1
-                        },
-                        new
-                        {
-                            ModelId = 2,
-                            FeatureId = 1
-                        },
-                        new
-                        {
-                            ModelId = 2,
-                            FeatureId = 2
-                        },
-                        new
-                        {
-                            ModelId = 5,
-                            FeatureId = 4
-                        },
-                        new
-                        {
-                            ModelId = 2,
-                            FeatureId = 3
-                        },
-                        new
-                        {
-                            ModelId = 5,
-                            FeatureId = 3
+                            Name = "Power Steering"
                         });
                 });
 
@@ -211,16 +173,10 @@ namespace LagoMotors.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagoMotors.Models.FeatureModel", b =>
+            modelBuilder.Entity("LagoMotors.Models.Feature", b =>
                 {
-                    b.HasOne("LagoMotors.Models.Feature", "Feature")
-                        .WithMany()
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LagoMotors.Models.Model", null)
-                        .WithMany("ModelFeatures")
+                        .WithMany("Features")
                         .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

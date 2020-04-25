@@ -2,7 +2,7 @@
 
 namespace LagoMotors.Migrations
 {
-    public partial class firstMdel : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,28 +40,28 @@ namespace LagoMotors.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feature",
+                name: "Features",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    ModelId = table.Column<int>(nullable: true)
+                    ModelId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feature", x => x.Id);
+                    table.PrimaryKey("PK_Features", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feature_Models_ModelId",
+                        name: "FK_Features_Models_ModelId",
                         column: x => x.ModelId,
                         principalTable: "Models",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feature_ModelId",
-                table: "Feature",
+                name: "IX_Features_ModelId",
+                table: "Features",
                 column: "ModelId");
 
             migrationBuilder.CreateIndex(
@@ -73,7 +73,7 @@ namespace LagoMotors.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Feature");
+                name: "Features");
 
             migrationBuilder.DropTable(
                 name: "Models");
