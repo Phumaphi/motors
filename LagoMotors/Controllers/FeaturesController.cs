@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using LagoMotors.Controllers.Resources;
 using LagoMotors.Data;
 using LagoMotors.Models;
 using Microsoft.AspNetCore.Http;
@@ -17,19 +19,21 @@ namespace LagoMotors.Controllers
     public class FeaturesController : ControllerBase
     {
         private readonly AppDbcontext _appDbcontext;
+        private readonly IMapper _mapper;
 
-        public FeaturesController(AppDbcontext appDbcontext)
+        public FeaturesController(AppDbcontext appDbcontext, IMapper mapper)
         {
             _appDbcontext = appDbcontext;
+            _mapper = mapper;
         }
         // GET: api/Features
         [HttpGet]
-        public async Task<IEnumerable<Feature>> Features()
+        public async Task<IEnumerable<FeatureResource>> Features()
         {
             var featureList = await _appDbcontext.Features.ToListAsync();
+            var feature= _mapper.Map<List<FeatureResource>>(featureList);
 
-
-            return featureList;
+            return feature;
         }
 
         // GET: api/Features/5
