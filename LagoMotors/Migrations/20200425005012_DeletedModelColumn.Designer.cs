@@ -3,14 +3,16 @@ using LagoMotors.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LagoMotors.Migrations
 {
     [DbContext(typeof(AppDbcontext))]
-    partial class AppDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20200425005012_DeletedModelColumn")]
+    partial class DeletedModelColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,38 +72,6 @@ namespace LagoMotors.Migrations
                     b.HasIndex("FeatureId");
 
                     b.ToTable("FeatureModels");
-
-                    b.HasData(
-                        new
-                        {
-                            ModelId = 1,
-                            FeatureId = 1
-                        },
-                        new
-                        {
-                            ModelId = 2,
-                            FeatureId = 1
-                        },
-                        new
-                        {
-                            ModelId = 2,
-                            FeatureId = 2
-                        },
-                        new
-                        {
-                            ModelId = 5,
-                            FeatureId = 4
-                        },
-                        new
-                        {
-                            ModelId = 2,
-                            FeatureId = 3
-                        },
-                        new
-                        {
-                            ModelId = 5,
-                            FeatureId = 3
-                        });
                 });
 
             modelBuilder.Entity("LagoMotors.Models.Make", b =>

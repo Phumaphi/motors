@@ -2,7 +2,7 @@
 
 namespace LagoMotors.Migrations
 {
-    public partial class initial_Model : Migration
+    public partial class firstMdel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace LagoMotors.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,7 +25,7 @@ namespace LagoMotors.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 255, nullable: false),
                     MakeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -45,8 +45,8 @@ namespace LagoMotors.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    ModelId = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(maxLength: 255, nullable: false),
+                    ModelId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace LagoMotors.Migrations
                         column: x => x.ModelId,
                         principalTable: "Models",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
