@@ -25,11 +25,16 @@ namespace LagoMotors.Data
             );
 
             modelBuilder.Entity<Feature>().HasData(
-                new Feature {Id = 1,Name = "AirBag",ModelId = 2},
-                new Feature { Id = 2,Name = "Breaks Lights",ModelId = 2},
-                new Feature {Id = 3,Name = "Baby Seat" ,ModelId = 1},
-                new Feature { Id = 4,Name = "Power Steering",ModelId = 1}
+                new Feature {Id = 1,Name = "AirBag"},
+                new Feature { Id = 2,Name = "Breaks Lights"},
+                new Feature {Id = 3,Name = "Baby Seat"},
+                new Feature { Id = 4,Name = "Power Steering"}
             );
+            modelBuilder.Entity<VehicleFeature>().HasKey(vf => new
+            {
+                vf.VehicleId, vf.FeatureId
+
+            });
 
         }
     }

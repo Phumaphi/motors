@@ -4,14 +4,16 @@ using LagoMotors.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LagoMotors.Migrations
 {
     [DbContext(typeof(AppDbcontext))]
-    partial class AppDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20200503122711_changedMakeIdTobeNullInFeature_Table")]
+    partial class changedMakeIdTobeNullInFeature_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,6 +28,9 @@ namespace LagoMotors.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ModelId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)")
@@ -39,21 +44,25 @@ namespace LagoMotors.Migrations
                         new
                         {
                             Id = 1,
+                            ModelId = 2,
                             Name = "AirBag"
                         },
                         new
                         {
                             Id = 2,
+                            ModelId = 2,
                             Name = "Breaks Lights"
                         },
                         new
                         {
                             Id = 3,
+                            ModelId = 1,
                             Name = "Baby Seat"
                         },
                         new
                         {
                             Id = 4,
+                            ModelId = 1,
                             Name = "Power Steering"
                         });
                 });
@@ -163,87 +172,11 @@ namespace LagoMotors.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagoMotors.Models.Vehicle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ContactEmail")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("ContactName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ContactPhone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(16)")
-                        .HasMaxLength(16);
-
-                    b.Property<bool>("IsRegistered")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModelId");
-
-                    b.ToTable("Vehicles");
-                });
-
-            modelBuilder.Entity("LagoMotors.Models.VehicleFeature", b =>
-                {
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FeatureId")
-                        .HasColumnType("int");
-
-                    b.HasKey("VehicleId", "FeatureId");
-
-                    b.HasIndex("FeatureId");
-
-                    b.ToTable("VehicleFeatures");
-                });
-
             modelBuilder.Entity("LagoMotors.Models.Model", b =>
                 {
                     b.HasOne("LagoMotors.Models.Make", "Make")
                         .WithMany("Models")
                         .HasForeignKey("MakeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LagoMotors.Models.Vehicle", b =>
-                {
-                    b.HasOne("LagoMotors.Models.Model", "Model")
-                        .WithMany()
-                        .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LagoMotors.Models.VehicleFeature", b =>
-                {
-                    b.HasOne("LagoMotors.Models.Feature", "Feature")
-                        .WithMany()
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LagoMotors.Models.Vehicle", "Vehicle")
-                        .WithMany("Features")
-                        .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
