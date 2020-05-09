@@ -31,7 +31,10 @@ namespace LagoMotors.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Vehicle>>> AllVehicles()
         {
-            return await _context.Vehicles.ToListAsync();
+            var vehicles = await _context.Vehicles.Include(f=>f.Features).ToListAsync();
+
+            var results = _mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicles);
+            return Ok(results);
         }
 
         // GET: api/Vehicles/5
