@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using LagoMotors.Controllers.Resources;
 using LagoMotors.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace LagoMotors.Data.MappingProfile
@@ -31,6 +32,7 @@ namespace LagoMotors.Data.MappingProfile
               
             // API Resource to Domain
             CreateMap<VehicleResource, Vehicle>()
+                .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.ContactName,
                     opt => opt.MapFrom(vr => vr.Contact.Name))
 
@@ -38,9 +40,29 @@ namespace LagoMotors.Data.MappingProfile
                     opt => opt.MapFrom(vr => vr.Contact.Email))
                 .ForMember(v => v.ContactPhone,
                     opt => opt.MapFrom(vr => vr.Contact.Phone))
-                .ForMember(v => v.Features,
-                    opt => opt.MapFrom(
-                        vr => vr.Features.Select(id => new VehicleFeature { FeatureId = id })));
+                .ForMember(v => v.Features, opt => opt.Ignore())
+                .AfterMap((vr, v) =>
+                {
+                 // removing unselected features
+                  var removedFeatures = v.Features.Where(f => !vr.Features.Contains(f.FeatureId)).ToList();
+                  foreach (var f in removedFeatures)
+                        v.Features.Remove(f);
+
+                  // Add new features
+                  var addedFeatures = vr.Features.Where(id => v.Features.All(f => f.FeatureId != id))
+                      .Select(id => new VehicleFeature {FeatureId = id}).ToList();
+
+                  foreach (var f in addedFeatures)
+                  {
+                      v.Features.Add( f);
+                  }
+
+                });
+                    
+
+
+
+
         }
 
     }

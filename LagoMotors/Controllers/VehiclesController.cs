@@ -36,48 +36,43 @@ namespace LagoMotors.Controllers
 
         // GET: api/Vehicles/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Vehicle>> GetVehicle(int id)
+        public async Task<IActionResult> GetVehicle(int id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles.Include(f=>f.Features).SingleOrDefaultAsync(v=>v.Id==id);
 
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return vehicle;
+            var vehicleResource = _mapper.Map<Vehicle, VehicleResource>(vehicle);
+
+
+            return Ok(vehicleResource);
         }
 
         // PUT: api/Vehicles/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVehicle(int id, Vehicle vehicle)
-        {
-            if (id != vehicle.Id)
+        public async Task<IActionResult> UpdateTaskVehicle(int id, VehicleResource vehicleResource)
+        { 
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            _context.Entry(vehicle).State = EntityState.Modified;
-
-            try
+            var vehicle = await _context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
+            if (vehicle == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VehicleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
+            vehicle.LastUpdate= DateTime.Now;
+            await _context.SaveChangesAsync();
+            var result = _mapper.Map<Vehicle, VehicleResource>(vehicle);
 
-            return NoContent();
+            return Ok(result);
         }
 
         // POST: api/Vehicles
@@ -86,9 +81,19 @@ namespace LagoMotors.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] VehicleResource vehicleResource)
         {
-         
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var model = await _context.Models.FindAsync(vehicleResource.ModelId);
 
+            // validate model Id 
+            if (model == null )
+            {
+                ModelState.AddModelError("ModelId", "Invalid modelId.");
+                return BadRequest(ModelState);
+            }
             var vehicle = _mapper.Map<VehicleResource, Vehicle>(vehicleResource);
             vehicle.LastUpdate=DateTime.Now;
          _context.Vehicles.Add(vehicle);
@@ -100,7 +105,7 @@ namespace LagoMotors.Controllers
 
         // DELETE: api/Vehicles/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Vehicle>> DeleteVehicle(int id)
+        public async Task<IActionResult> DeleteVehicle(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
             if (vehicle == null)
@@ -111,7 +116,7 @@ namespace LagoMotors.Controllers
             _context.Vehicles.Remove(vehicle);
             await _context.SaveChangesAsync();
 
-            return vehicle;
+            return Ok(id);
         }
 
         private bool VehicleExists(int id)
