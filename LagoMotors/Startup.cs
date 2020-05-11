@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using LagoMotors.Data.MappingProfile;
+using LagoMotors.Data.Repository;
 
 namespace LagoMotors
 {
@@ -23,6 +24,7 @@ namespace LagoMotors
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services.AddScoped<IVehicleRepository,VehicleRepository>();
             var mappingConfig=new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());

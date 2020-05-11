@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LagoMotors.Data;
+using LagoMotors.Data.Repository;
 using LagoMotors.Models;
 
 namespace LagoMotors.Controllers
@@ -17,23 +18,27 @@ namespace LagoMotors.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly AppDbcontext _context;
+        private readonly IVehicleRepository _vehicleRepo;
 
-        public VehiclesController(IMapper mapper, AppDbcontext context)
+        public VehiclesController(IMapper mapper, AppDbcontext context, IVehicleRepository vehicleRepo)
         {
             _mapper = mapper;
             _context = context;
+            _vehicleRepo = vehicleRepo;
         }
-        private readonly AppDbcontext _context;
-
 
 
         // GET: api/Vehicles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SaveVehicleResource>>> Vehicles()
+        public async Task<ActionResult<IEnumerable<VehicleResource>>> Vehicles()
         {
-            var vehicles = await _context.Vehicles.Include(f=>f.Features).ToListAsync();
+            //  var vehicles = await _context.Vehicles.Include(f=>f.Features).ToListAsync();
 
-            var results = _mapper.Map<List<Vehicle>, List<SaveVehicleResource>>(vehicles);
+
+            var vehicles = await _vehicleRepo.GetVehicle();
+            var results = _mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicles);
+
             return Ok(results);
         }
 
@@ -67,15 +72,20 @@ namespace LagoMotors.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await _context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
+            // var vehicle = await _context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
+
+            var vehicle = _vehicleRepo.GetVehicle(id);
+
+
+
             if (vehicle == null)
             {
                 return NotFound();
             }
-            _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource, vehicle);
-            vehicle.LastUpdate= DateTime.Now;
+            _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource, vehicle.Result);
+            vehicle.Result.LastUpdate= DateTime.Now;
             await _context.SaveChangesAsync();
-            var result = _mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
+            var result = _mapper.Map<Vehicle,VehicleResource>(vehicle.Result);
 
             return Ok(result);
         }
@@ -103,7 +113,10 @@ namespace LagoMotors.Controllers
             vehicle.LastUpdate=DateTime.Now;
          _context.Vehicles.Add(vehicle);
          await _context.SaveChangesAsync();
-         var result = _mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
+
+         vehicle = await _vehicleRepo.GetVehicle(vehicle.Id);
+
+            var result = _mapper.Map<Vehicle, VehicleResource>(vehicle);
          
          return CreatedAtAction("Vehicles", new { id = vehicle.Id }, result);
         }
