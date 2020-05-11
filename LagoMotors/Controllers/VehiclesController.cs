@@ -29,19 +29,21 @@ namespace LagoMotors.Controllers
 
         // GET: api/Vehicles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Vehicle>>> AllVehicles()
+        public async Task<ActionResult<IEnumerable<SaveVehicleResource>>> Vehicles()
         {
             var vehicles = await _context.Vehicles.Include(f=>f.Features).ToListAsync();
 
-            var results = _mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicles);
+            var results = _mapper.Map<List<Vehicle>, List<SaveVehicleResource>>(vehicles);
             return Ok(results);
         }
 
         // GET: api/Vehicles/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetVehicle(int id)
+        public async Task<IActionResult> Vehicle(int id)
         {
-            var vehicle = await _context.Vehicles.Include(f=>f.Features).SingleOrDefaultAsync(v=>v.Id==id);
+            var vehicle = await _context.Vehicles.Include(m=>m.Model)
+                .Include(f=>f.Features)
+                .ThenInclude(vf=>vf.Feature).SingleOrDefaultAsync(v=>v.Id==id);
 
             if (vehicle == null)
             {
@@ -58,7 +60,7 @@ namespace LagoMotors.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTaskVehicle(int id, VehicleResource vehicleResource)
+        public async Task<IActionResult> UpdateTaskVehicle(int id, SaveVehicleResource saveVehicleResource)
         { 
             if (!ModelState.IsValid)
             {
@@ -70,10 +72,10 @@ namespace LagoMotors.Controllers
             {
                 return NotFound();
             }
-            _mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
+            _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource, vehicle);
             vehicle.LastUpdate= DateTime.Now;
             await _context.SaveChangesAsync();
-            var result = _mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = _mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
 
             return Ok(result);
         }
@@ -82,14 +84,14 @@ namespace LagoMotors.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<IActionResult> CreateVehicle([FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource saveVehicleResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var model = await _context.Models.FindAsync(vehicleResource.ModelId);
+            var model = await _context.Models.FindAsync(saveVehicleResource.ModelId);
 
             // validate model Id 
             if (model == null )
@@ -97,13 +99,13 @@ namespace LagoMotors.Controllers
                 ModelState.AddModelError("ModelId", "Invalid modelId.");
                 return BadRequest(ModelState);
             }
-            var vehicle = _mapper.Map<VehicleResource, Vehicle>(vehicleResource);
+            var vehicle = _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource);
             vehicle.LastUpdate=DateTime.Now;
          _context.Vehicles.Add(vehicle);
          await _context.SaveChangesAsync();
-         var result = _mapper.Map<Vehicle, VehicleResource>(vehicle);
+         var result = _mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
          
-         return CreatedAtAction("AllVehicles", new { id = vehicle.Id }, result);
+         return CreatedAtAction("Vehicles", new { id = vehicle.Id }, result);
         }
 
         // DELETE: api/Vehicles/5

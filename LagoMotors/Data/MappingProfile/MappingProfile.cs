@@ -17,7 +17,7 @@ namespace LagoMotors.Data.MappingProfile
             CreateMap<Make, MakeResource>().ReverseMap();
             CreateMap<Feature, FeatureResource>().ReverseMap();
             CreateMap<Model, ModelResource>().ReverseMap();
-            CreateMap<Vehicle,VehicleResource>()
+            CreateMap<Vehicle,SaveVehicleResource>()
                 .ForMember(vr => vr.Contact,
                     opt => opt.MapFrom(
                         v => new ContactResource
@@ -29,9 +29,30 @@ namespace LagoMotors.Data.MappingProfile
 
                 .ForMember(vr => vr.Features,
                     opt => opt.MapFrom(v => v.Features.Select(vf=>vf.FeatureId)));
-              
+
+            CreateMap<Vehicle, VehicleResource>()
+                .ForMember(vr => vr.Contact,
+                    opt => opt.MapFrom(
+                        v => new ContactResource
+                        {
+                            Name = v.ContactName,
+                            Email = v.ContactEmail,
+                            Phone = v.ContactPhone
+                        }))
+
+                .ForMember(vr => vr.Features,
+                    opt => opt.MapFrom(v => v.Features.Select(vf => new FeatureResource
+                    {
+                        Id = vf.FeatureId,
+                        Name = vf.Feature.Name
+
+                    })));
+
+
+
+
             // API Resource to Domain
-            CreateMap<VehicleResource, Vehicle>()
+            CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.ContactName,
                     opt => opt.MapFrom(vr => vr.Contact.Name))
