@@ -13,6 +13,7 @@ namespace LagoMotors.Controllers.Resources
         public ModelResource Model { get; set; }
         public bool IsRegistered { get; set; }
         public ContactResource Contact { get; set; }
+        public MakeResource Make { get; set; }
         public DateTime LastUpdate { get; set; }
         public ICollection<FeatureResource> Features { get; set; }
 

@@ -41,7 +41,7 @@ namespace LagoMotors.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Vehicle(int id)
         {
-            var vehicle = await _context.Vehicles.Include(m=>m.Model)
+            var vehicle = await _context.Vehicles.Include(m=>m.Model).ThenInclude(m=>m.Make)
                 .Include(f=>f.Features)
                 .ThenInclude(vf=>vf.Feature).SingleOrDefaultAsync(v=>v.Id==id);
 

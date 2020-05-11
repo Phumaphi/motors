@@ -39,6 +39,8 @@ namespace LagoMotors.Data.MappingProfile
                             Email = v.ContactEmail,
                             Phone = v.ContactPhone
                         }))
+                .ForMember(vr=>vr.Make,
+                    opt=>opt.MapFrom(v=>v.Model.Make))
 
                 .ForMember(vr => vr.Features,
                     opt => opt.MapFrom(v => v.Features.Select(vf => new FeatureResource
