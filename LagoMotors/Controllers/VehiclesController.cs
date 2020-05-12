@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using LagoMotors.Controllers.Resources;
+using LagoMotors.Core.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LagoMotors.Data;
-using LagoMotors.Data.Interface;
 using LagoMotors.Models;
 
 namespace LagoMotors.Controllers

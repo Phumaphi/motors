@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using LagoMotors.Controllers.Resources;
 using LagoMotors.Models;
 
-namespace LagoMotors.Data.Interface
+namespace LagoMotors.Core.Interface
 {
     public interface IVehicleRepository
     {

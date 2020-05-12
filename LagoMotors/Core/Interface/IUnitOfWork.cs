@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace LagoMotors.Data.Interface
+namespace LagoMotors.Core.Interface
 {
     public interface IUnitOfWork
     {

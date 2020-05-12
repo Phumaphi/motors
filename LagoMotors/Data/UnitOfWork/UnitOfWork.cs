@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LagoMotors.Data.Interface;
+using LagoMotors.Core.Interface;
 
 namespace LagoMotors.Data.UnitOfWork
 {
-    public class UnitOfWork:IUnitOfWork
+    public class UnitOfWork: IUnitOfWork
     {
         private readonly AppDbcontext _context;
 

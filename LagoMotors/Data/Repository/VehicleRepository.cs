@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LagoMotors.Controllers.Resources;
-using LagoMotors.Data.Interface;
+using LagoMotors.Core.Interface;
 using LagoMotors.Models;
 using Microsoft.EntityFrameworkCore;
 
