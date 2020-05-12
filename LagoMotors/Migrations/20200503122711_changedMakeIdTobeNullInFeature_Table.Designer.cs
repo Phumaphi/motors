@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LagoMotors.Migrations
 {
     [DbContext(typeof(AppDbcontext))]
-    [Migration("20200425002452_addedFeatureModel")]
-    partial class addedFeatureModel
+    [Migration("20200503122711_changedMakeIdTobeNullInFeature_Table")]
+    partial class changedMakeIdTobeNullInFeature_Table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,13 +38,13 @@ namespace LagoMotors.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feature");
+                    b.ToTable("Features");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            ModelId = 1,
+                            ModelId = 2,
                             Name = "AirBag"
                         },
                         new
@@ -62,30 +62,9 @@ namespace LagoMotors.Migrations
                         new
                         {
                             Id = 4,
+                            ModelId = 1,
                             Name = "Power Steering"
                         });
-                });
-
-            modelBuilder.Entity("LagoMotors.Models.FeatureModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FeatureId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FeatureId");
-
-                    b.HasIndex("ModelId");
-
-                    b.ToTable("FeatureModels");
                 });
 
             modelBuilder.Entity("LagoMotors.Models.Make", b =>
@@ -191,21 +170,6 @@ namespace LagoMotors.Migrations
                             MakeId = 4,
                             Name = "C-Class"
                         });
-                });
-
-            modelBuilder.Entity("LagoMotors.Models.FeatureModel", b =>
-                {
-                    b.HasOne("LagoMotors.Models.Feature", "Feature")
-                        .WithMany()
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LagoMotors.Models.Model", null)
-                        .WithMany("ModelFeatures")
-                        .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("LagoMotors.Models.Model", b =>

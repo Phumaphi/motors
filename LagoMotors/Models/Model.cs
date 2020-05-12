@@ -9,10 +9,7 @@ namespace LagoMotors.Models
 {
     public class Model
     {
-        public Model()
-        {
-            ModelFeatures=new Collection<FeatureModel>();
-        }
+       
         public int Id { get; set; }
         [Required]
         [StringLength(255)]
@@ -20,6 +17,5 @@ namespace LagoMotors.Models
         [Required]
         public int MakeId { get; set; }
         public Make Make { get; set; }
-        public ICollection<FeatureModel> ModelFeatures { get; set; }
     }
 }

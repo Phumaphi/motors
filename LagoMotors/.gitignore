@@ -16,7 +16,8 @@ LagoMotors/v16/*
 /.vs/LagoMotors/DesignTimeBuild
 /.vs/LagoMotors/config
 /.vs/config
-
+.v16/*
+.v15/*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
