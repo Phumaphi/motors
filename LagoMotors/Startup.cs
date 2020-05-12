@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using LagoMotors.Core.Interface;
+using LagoMotors.Data.Interface;
 using LagoMotors.Data.MappingProfile;
 using LagoMotors.Data.Repository;
 using LagoMotors.Data.UnitOfWork;

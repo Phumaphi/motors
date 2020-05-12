@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LagoMotors.Data;
+using LagoMotors.Data.Interface;
 using LagoMotors.Models;
 
 namespace LagoMotors.Controllers
