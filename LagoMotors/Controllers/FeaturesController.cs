@@ -24,11 +24,11 @@ namespace LagoMotors.Controllers
         }
         // GET: api/Features
         [HttpGet]
-        public async Task<IEnumerable<FeatureResource>> Features()
+        public async Task<IEnumerable<KeyValuePairResource>> Features()
         
         {
             var featureList = await _appDbcontext.Features.ToListAsync();
-            var feature= _mapper.Map<List<FeatureResource>>(featureList);
+            var feature= _mapper.Map<List<KeyValuePairResource>>(featureList);
 
                 return feature;
         }

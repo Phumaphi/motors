@@ -15,9 +15,10 @@ namespace LagoMotors.Data.MappingProfile
         public MappingProfile()
         {   //Domain to API Resource
             CreateMap<Make, MakeResource>().ReverseMap();
-            CreateMap<Feature, FeatureResource>().ReverseMap();
-            CreateMap<Model, ModelResource>().ReverseMap();
-            CreateMap<Vehicle,VehicleResource>()
+             CreateMap<Make, KeyValuePairResource>().ReverseMap();
+            CreateMap<Feature, KeyValuePairResource>().ReverseMap();
+            CreateMap<Model, KeyValuePairResource>().ReverseMap();
+            CreateMap<Vehicle,SaveVehicleResource>()
                 .ForMember(vr => vr.Contact,
                     opt => opt.MapFrom(
                         v => new ContactResource
@@ -29,9 +30,27 @@ namespace LagoMotors.Data.MappingProfile
 
                 .ForMember(vr => vr.Features,
                     opt => opt.MapFrom(v => v.Features.Select(vf=>vf.FeatureId)));
-              
+            // map get vehicle
+            CreateMap<Vehicle, VehicleResource>()
+                .ForMember(vr => vr.Make,opt=>opt.MapFrom(v=>v.Model.Make))
+                .ForMember(vr => vr.Contact,
+                    opt => opt.MapFrom(
+                        v => new ContactResource
+                        {
+                            Name = v.ContactName,
+                            Email = v.ContactEmail,
+                            Phone = v.ContactPhone
+                        }))
+
+                .ForMember(vr => vr.Features,
+                    opt => opt.MapFrom(v => v.Features.Select(vf => new KeyValuePairResource
+                    {
+                        Id = vf.FeatureId,
+                        Name = vf.Feature.Name
+                    })));
+
             // API Resource to Domain
-            CreateMap<VehicleResource, Vehicle>()
+            CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.ContactName,
                     opt => opt.MapFrom(vr => vr.Contact.Name))
