@@ -122,6 +122,7 @@ namespace LagoMotors.Controllers
                 return NotFound();
             }
 
+            //_context.Vehicles.Remove(vehicle);
             _iVehicleRepo.Remove(vehicle);
             await _iUnitOfWork.CompleteAsync();
 
