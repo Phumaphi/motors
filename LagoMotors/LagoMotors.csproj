@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Repository\" />
-    <Folder Include="Core\Interface\" />
   </ItemGroup>
 
 
