@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
+using LagoMotors.Data.Interface;
 using LagoMotors.Data.MappingProfile;
+using LagoMotors.Data.Repository;
 
 namespace LagoMotors
 {
@@ -36,6 +38,7 @@ namespace LagoMotors
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Connection"));
             });
+            services.AddScoped<IVehicleRepository,VehicleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
