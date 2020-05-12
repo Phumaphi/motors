@@ -9,6 +9,7 @@ using AutoMapper;
 using LagoMotors.Data.Interface;
 using LagoMotors.Data.MappingProfile;
 using LagoMotors.Data.Repository;
+using LagoMotors.Data.UnitOfWork;
 
 namespace LagoMotors
 {
@@ -39,6 +40,7 @@ namespace LagoMotors
                 options.UseSqlServer(Configuration.GetConnectionString("Connection"));
             });
             services.AddScoped<IVehicleRepository,VehicleRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

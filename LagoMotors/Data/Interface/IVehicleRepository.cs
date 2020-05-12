@@ -9,7 +9,9 @@ namespace LagoMotors.Data.Interface
 {
     public interface IVehicleRepository
     {
-        Task<Vehicle> GetVehicle(int id);
+        Task<Vehicle> GetVehicle(int id, bool includeRelated=true);
         Task<List<Vehicle>> GetVehicles();
+        void Add(Vehicle vehicle);
+        void Remove(Vehicle vehicle);
     }
 }

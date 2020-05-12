@@ -17,9 +17,13 @@ namespace LagoMotors.Data.Repository
         {
             _context = context;
         }
-        public async Task<Vehicle> GetVehicle(int id)
+        
+        public async Task<Vehicle> GetVehicle(int id, bool includeRelated=true)
         {
-           return await _context.Vehicles
+            if (!includeRelated)
+                return await _context.Vehicles.FindAsync(id);
+
+            return await _context.Vehicles
                 .Include(f => f.Features)
                 .ThenInclude(vf => vf.Feature)
                 .Include(v => v.Model)
@@ -35,5 +39,20 @@ namespace LagoMotors.Data.Repository
                 .Include(v => v.Model)
                 .ThenInclude(m => m.Make).ToListAsync();
         }
+
+
+
+        public void Add(Vehicle vehicle)
+        {
+            _context.Add(vehicle);
+        }
+
+        public void Remove(Vehicle vehicle)
+        {
+            _context.Remove(vehicle);
+        }
+
+       
     }
+
 }

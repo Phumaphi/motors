@@ -18,17 +18,21 @@ namespace LagoMotors.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly AppDbcontext _context;
         private readonly IVehicleRepository _iVehicleRepo;
+        private readonly IUnitOfWork _iUnitOfWork;
 
 
-        public VehiclesController(IMapper mapper, AppDbcontext context, IVehicleRepository iVehicleRepo)
+        public VehiclesController(
+            IMapper mapper,
+            AppDbcontext context,
+            IVehicleRepository iVehicleRepo,
+            IUnitOfWork iUnitOfWork)
         {
             _mapper = mapper;
-            _context = context;
             _iVehicleRepo = iVehicleRepo;
+            _iUnitOfWork = iUnitOfWork;
         }
-      
+
 
         // GET: api/Vehicles
         [HttpGet]
@@ -76,7 +80,8 @@ namespace LagoMotors.Controllers
             }
             _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource, vehicle.Result);
             vehicle.Result.LastUpdate= DateTime.Now;
-            await _context.SaveChangesAsync();
+            await _iUnitOfWork.CompleteAsync();
+            vehicle = Task.FromResult(await _iVehicleRepo.GetVehicle(id));
             var result = _mapper.Map<Vehicle, VehicleResource>(vehicle.Result);
 
             return Ok(result);
@@ -93,18 +98,11 @@ namespace LagoMotors.Controllers
                 return BadRequest(ModelState);
             }
 
-            var model = await _context.Models.FindAsync(saveVehicleResource.ModelId);
-
-            // validate model Id 
-            if (model == null )
-            {
-                ModelState.AddModelError("ModelId", "Invalid modelId.");
-                return BadRequest(ModelState);
-            }
             var vehicle = _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource);
             vehicle.LastUpdate=DateTime.Now;
-         _context.Vehicles.Add(vehicle);
-         await _context.SaveChangesAsync();
+            _iVehicleRepo.Add(vehicle);
+
+            await _iUnitOfWork.CompleteAsync();
 
 
          vehicle = await _iVehicleRepo.GetVehicle(vehicle.Id);
@@ -118,21 +116,17 @@ namespace LagoMotors.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _iVehicleRepo.GetVehicle(id, includeRelated: false);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            _context.Vehicles.Remove(vehicle);
-            await _context.SaveChangesAsync();
+            _iVehicleRepo.Remove(vehicle);
+            await _iUnitOfWork.CompleteAsync();
 
             return Ok(id);
         }
 
-        private bool VehicleExists(int id)
-        {
-            return _context.Vehicles.Any(e => e.Id == id);
-        }
     }
 }
